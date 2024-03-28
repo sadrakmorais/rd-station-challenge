@@ -71,6 +71,10 @@ function customerSuccessBalancing(
     customerSuccessAssignment
   );
 
+  if (maxAssignedCustomers === 0) {
+    return 0; // Nenhum cliente foi atribuído a nenhum CS
+  }
+
   return findTopCustomerSuccess(
     customerSuccessAssignment,
     maxAssignedCustomers
