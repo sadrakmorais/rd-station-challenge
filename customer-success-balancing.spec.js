@@ -96,6 +96,13 @@ test("Scenario 1", () => {
 
   expect(customerSuccessBalancing(css, customers, csAway)).toEqual(1);
 });
+function buildSizeEntitiesCss(size, score) {
+  const result = [];
+  for (let i = 0; i < size; i += 1) {
+    result.push({ id: i + 1, score: score + i });
+  }
+  return result;
+}
 
 function buildSizeEntities(size, score) {
   const result = [];
@@ -192,7 +199,7 @@ test("Should return 0 when all customers have higher scores.", () => {
 });
 
 test("Should return an error for not being within the correct range of customers numbers.", () => {
-  const css = buildSizeEntities(10, 50);
+  const css = buildSizeEntitiesCss(10, 1);
   const customers = buildSizeEntities(1000001, 50);
   const csAway = [2, 4];
 
@@ -242,11 +249,11 @@ test("Should return an error for exceeding the maximum customer level", () => {
 
   expect(() => {
     customerSuccessBalancing(css, customers, csAway);
-  }).toThrow("O nível do cliente deve ser entre 1 e 99999.");
+  }).toThrow("O nível do cliente deve estar entre 1 e 99999.");
 });
 
 test("Should return an error for not being within the correct range of customerSuccess numbers.", () => {
-  const css = buildSizeEntities(1000, 50);
+  const css = buildSizeEntitiesCss(1000, 1);
   const customers = [
     { id: 1, score: 90 },
     { id: 2, score: 20 },
@@ -326,4 +333,21 @@ test("Should return an error for exceeding the maximum number of customerSuccess
   expect(() => {
     customerSuccessBalancing(css, customers, csAway);
   }).toThrow("O número de abstenções de CSs excedeu o limite.");
+});
+
+test("Should return an error when one or more customer success agents have the same level", () => {
+  const css = buildSizeEntities(10, 10);
+  const customers = [
+    { id: 1, score: 90 },
+    { id: 2, score: 20 },
+    { id: 3, score: 70 },
+    { id: 4, score: 40 },
+    { id: 5, score: 60 },
+    { id: 6, score: 10 },
+  ];
+  const csAway = [1, 2, 4];
+
+  expect(() => {
+    customerSuccessBalancing(css, customers, csAway);
+  }).toThrow("Os CSs devem ter níveis diferentes.");
 });
